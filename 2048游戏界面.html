@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>填充纹理</title>
+    <style>
+      body {
+        background: url('./car.png') repeat;
+      }
+      #canvas {
+        border: 1px solid #aaaaaa;
+        display: block;
+        margin: 50px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas-warp">
+      <canvas id="canvas">
+        你的浏览器居然不支持Canvas？！赶快换一个吧！！
+      </canvas>
+    </div>
+
+    <script>
+      window.onload = function () {
+        var canvas = document.getElementById('canvas')
+        canvas.width = 800
+        canvas.height = 600
+        var context = canvas.getContext('2d')
+        context.fillStyle = 'pink'
+        context.fillRect(0, 0, 800, 600)
+        drawRoundRect(context, 200, 100, 400, 400, 20)
+        //                     起始点    宽高      半径
+        context.strokeStyle = 'blue'
+        context.stroke()
+        // context.arc(x,y,radius,startAngle,endAngle,anticlockwise)
+        function drawRoundRect(ctx, x, y, width, height, radius) {
+          ctx.beginPath()
+          ctx.arc(x + radius, y + radius, radius, Math.PI, (Math.PI * 3) / 2)
+          ctx.lineTo(width + x - radius, y)
+          ctx.arc(
+            width + x - radius,
+            y + radius,
+            radius,
+            (Math.PI * 3) / 2,
+            Math.PI * 2
+          )
+          ctx.lineTo(width + x, y + height - radius)
+          ctx.arc(
+            width + x - radius,
+            y + height - radius,
+            radius,
+            0,
+            Math.PI / 2
+          )
+          ctx.lineTo(x + radius, y + height)
+          ctx.arc(x + radius, y + height - radius, radius, Math.PI / 2, Math.PI)
+          ctx.closePath()
+        }
+        for (let i = 1; i <= 4; i++) {
+          for (let j = 1; j <= 4; j++) {
+            drawRoundRect(
+              context,
+              200 + 16 * i + 80 * (i - 1),
+              100 + 16 * j + 80 * (j - 1),
+              80,
+              80,
+              5
+            )
+            context.fillStyle = '#CCBFB4'
+            context.strokeStyle = '#0078AA'
+            context.stroke()
+            context.fill()
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

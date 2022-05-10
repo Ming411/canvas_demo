@@ -1,0 +1,74 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+.caidan {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  border-bottom: 1px solid #ccc;
+}
+#canvas {
+  flex: 1;
+  width: 100vw;
+}
+.btn,
+.btn1,
+.btn2 {
+  width: 150px;
+  line-height: 50px;
+  height: 50px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 60px;
+  background-size: auto 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.btn.active {
+  box-shadow: 0 0 20px deepskyblue;
+  border: 1px solid deepskyblue;
+}
+.btn1.active,
+.btn2.active {
+  box-shadow: 0 0 20px deepskyblue;
+  border: 1px solid deepskyblue;
+}
+.line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.xi::before {
+  content: '';
+  display: block;
+  border-radius: 50%;
+  background-color: black;
+  width: 6px;
+  height: 6px;
+}
+.normal::before {
+  content: '';
+  display: block;
+  border-radius: 50%;
+  background-color: black;
+  width: 16px;
+  height: 16px;
+}
+.cu::before {
+  content: '';
+  display: block;
+  border-radius: 50%;
+  background-color: black;
+  width: 32px;
+  height: 32px;
+}

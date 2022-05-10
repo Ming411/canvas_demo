@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <canvas id="canvas">
+      你的浏览器居然不支持Canvas？！赶快换一个吧！！
+    </canvas>
+    <script>
+      const canvas = document.querySelector('#canvas')
+      canvas.width = 800
+      canvas.height = 600
+      let ctx = canvas.getContext('2d')
+      render()
+      function render() {
+        // 清除画布
+        ctx.clearRect(0, 0, 800, 600)
+        ctx.save()
+        // 将坐标轴移动到中心位置，绘制圆时就不需要再移动了
+        ctx.translate(400, 300)
+        ctx.rotate(-Math.PI / 2)
+        ctx.save()
+        //  绘制表盘
+        ctx.beginPath()
+        ctx.arc(0, 0, 200, 0, Math.PI * 2)
+        ctx.strokeStyle = '#ccc'
+        ctx.lineWidth = 10
+        ctx.stroke()
+        ctx.closePath()
+        // 注意：每绘制一个图形就得beginPath和closePath 一下
+
+        // 小时刻度
+        for (let i = 0; i < 12; i++) {
+          ctx.rotate(Math.PI / 6)
+          ctx.beginPath()
+          ctx.moveTo(180, 0)
+          ctx.lineTo(200, 0)
+          ctx.strokeStyle = '#ccc'
+          ctx.stroke()
+          ctx.closePath()
+        }
+        ctx.restore()
+        ctx.save()
+        // 分钟刻度
+        for (let i = 0; i < 60; i++) {
+          ctx.rotate(Math.PI / 30)
+          ctx.beginPath()
+          ctx.moveTo(190, 0)
+          ctx.lineTo(200, 0)
+          ctx.lineWidth = 2
+          ctx.strokeStyle = '#ccc'
+          ctx.stroke()
+          ctx.closePath()
+        }
+        ctx.restore()
+        ctx.save()
+        // 获取当前时间
+        let time = new Date()
+        let hour = time.getHours()
+        let min = time.getMinutes()
+        let sec = time.getSeconds()
+        hour = hour > 12 ? hour - 12 : hour
+        console.log(hour + ':' + min + ':' + sec)
+        // 绘制秒钟
+        ctx.beginPath()
+        ctx.rotate((Math.PI / 30) * sec)
+        ctx.moveTo(-30, 0)
+        ctx.lineTo(170, 0)
+        ctx.lineWidth = 2
+        ctx.strokeStyle = 'red'
+        ctx.stroke()
+        ctx.closePath()
+        ctx.restore()
+        ctx.save()
+        // 绘制分钟
+        ctx.beginPath()
+        ctx.rotate((Math.PI / 30) * min + ((2 * Math.PI) / 3600) * sec)
+        ctx.moveTo(-30, 0)
+        ctx.lineTo(160, 0)
+        ctx.lineWidth = 5
+        ctx.strokeStyle = 'blue'
+        ctx.stroke()
+        ctx.closePath()
+        ctx.restore()
+        ctx.save()
+        // 绘制时钟
+        ctx.beginPath()
+        ctx.rotate(
+          (Math.PI / 6) * hour +
+            ((2 * Math.PI) / 720) * min +
+            ((2 * Math.PI) / 12 / 60 / 60) * sec
+        )
+        ctx.moveTo(-30, 0)
+        ctx.lineTo(150, 0)
+        ctx.lineWidth = 10
+        ctx.strokeStyle = 'black'
+        ctx.stroke()
+        ctx.closePath()
+        // 绘制表中间小圆点
+        ctx.beginPath()
+        ctx.arc(0, 0, 10, 0, 2 * Math.PI)
+        ctx.fillStyle = 'red'
+        ctx.fill()
+        ctx.closePath()
+        ctx.restore()
+        ctx.restore()
+      }
+
+      setInterval(render, 1000)
+    </script>
+  </body>
+</html>

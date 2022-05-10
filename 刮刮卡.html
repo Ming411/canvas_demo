@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>刮刮卡</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      #canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 400px;
+        height: 100px;
+      }
+      .ggk {
+        position: relative;
+        width: 400px;
+        height: 100px;
+      }
+      .jp {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 400px;
+        font-size: 25px;
+        text-align: center;
+        line-height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ggk">
+      <div class="jp"></div>
+      <canvas id="canvas">
+        你的浏览器居然不支持Canvas？！赶快换一个吧！！
+      </canvas>
+    </div>
+
+    <script>
+      window.onload = function () {
+        var canvas = document.getElementById('canvas')
+        var ggk = document.querySelector('.ggk')
+        var jp = document.querySelector('.jp')
+        canvas.width = 400
+        canvas.height = 100
+        var ctx = canvas.getContext('2d')
+        ctx.fillStyle = '#ccc'
+        ctx.fillRect(0, 0, 400, 100)
+        ctx.fillStyle = '#fff'
+        ctx.font = '20px 微软雅黑'
+        ctx.fillText('刮刮卡', 180, 40)
+        let isDown = false
+        canvas.onmousedown = (e) => {
+          isDown = true
+        }
+        canvas.onmousemove = (e) => {
+          if (isDown) {
+            let x = e.pageX - ggk.offsetLeft
+            let y = e.pageY - ggk.offsetTop
+            // 让原图像透明并显示源图像之外的内容
+            ctx.globalCompositeOperation = 'destination-out'
+            ctx.arc(x, y, 20, 0, Math.PI * 2)
+            ctx.fill()
+          }
+        }
+        canvas.onmouseup = () => {
+          isDown = false
+        }
+
+        var arr = [
+          {
+            content: '一等奖',
+            p: 0.1,
+          },
+          {
+            content: '二等奖',
+            p: 0.2,
+          },
+          {
+            content: '三等奖',
+            p: 0.3,
+          },
+          {
+            content: '谢谢惠顾',
+            p: 0.4,
+          },
+        ]
+        let random = Math.random()
+        if (random < arr[0].p) {
+          jp.innerHTML = arr[0].content
+        } else if (random < arr[0].p + arr[1].p) {
+          jp.innerHTML = arr[1].content
+        } else if (random < arr[0].p + arr[1].p + arr[2].p) {
+          jp.innerHTML = arr[2].content
+        } else {
+          jp.innerHTML = arr[3].content
+        }
+      }
+    </script>
+  </body>
+</html>

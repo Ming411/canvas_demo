@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/画板.css" />
+    <link rel="stylesheet" href="./css/alert.css" />
+    <script src="./js/alert.js"></script>
+  </head>
+
+  <body>
+    <div class="caidan">
+      <div
+        class="btn"
+        id="huabi"
+        style="background-image: url(imgs/huabi.png)"
+      ></div>
+      <div class="btn" id="rect">矩形</div>
+      <div class="btn">圆形</div>
+      <div class="btn">橡皮擦</div>
+      <div class="btn2 download">下载图片</div>
+      <div class="btn1 line xi"></div>
+      <div class="btn1 line normal"></div>
+      <div class="btn1 line cu"></div>
+      <div class="btn2">
+        <input type="color" id="color" />
+      </div>
+    </div>
+    <canvas id="canvas">
+      你的浏览器居然不支持Canvas？！赶快换一个吧！！
+    </canvas>
+    <script>
+      let canvas = document.querySelector('#canvas')
+      canvas.setAttribute('width', canvas.offsetWidth)
+      canvas.setAttribute('height', canvas.offsetHeight)
+      let ctx = canvas.getContext('2d')
+      let huabiBtn = document.querySelector('#huabi')
+      let rectBtn = document.querySelector('#rect')
+      let allBtn = document.querySelectorAll('.btn')
+      var huaban = {
+        type: 'none',
+        isDraw: false,
+        isBtn: false,
+        beginX: 0,
+        beginY: 0,
+        color: 'black',
+        lineWidth: 6,
+        imageData: null, // 存储绘制的图形
+        huabiFn: function (e) {
+          var x = e.pageX - canvas.offsetLeft
+          var y = e.pageY - canvas.offsetTop
+          // ctx.beginPath()
+          // // 普通画笔，由圆连接而成的线
+          // ctx.arc(x, y, 3, 0, Math.PI * 2)
+          // ctx.fill()
+          // ctx.closePath()
+          ctx.lineTo(x, y)
+          ctx.strokeStyle = huaban.color
+          ctx.lineCap = 'round'
+          ctx.lineJoin = 'round'
+          ctx.lineWidth = huaban.lineWidth
+          ctx.stroke()
+        },
+        rectFn: function (e) {
+          var x = e.pageX - canvas.offsetLeft
+          var y = e.pageY - canvas.offsetTop
+          ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight)
+          if (huaban.imageData) {
+            // 将上一步绘制的图像还原
+            ctx.putImageData(
+              huaban.imageData,
+              0, // 位置
+              0,
+              0, // 数据的宽高
+              0,
+              canvas.offsetWidth,
+              canvas.offsetHeight
+            )
+          }
+
+          ctx.beginPath()
+          // 绘制矩形
+          ctx.rect(
+            huaban.beginX,
+            huaban.beginY,
+            x - huaban.beginX,
+            y - huaban.beginY
+          )
+          ctx.strokeStyle = huaban.color
+          ctx.stroke()
+          ctx.closePath()
+        },
+      }
+      // 画笔绘制
+      huabiBtn.onclick = function () {
+        // 排他思想展示高亮
+        allBtn.forEach((item, i) => {
+          item.classList.remove('active')
+        })
+        huabiBtn.classList.add('active')
+        huaban.type = 'huabi'
+        // huaban.isDraw = true
+        huaban.isBtn = true
+        goDraw()
+      }
+      // 矩形绘制
+      rectBtn.onclick = function () {
+        allBtn.forEach((item, i) => {
+          item.classList.remove('active')
+        })
+        rectBtn.classList.add('active')
+        huaban.type = 'rect'
+        // huaban.isDraw = true
+        huaban.isBtn = true
+        goDraw()
+      }
+      function goDraw() {
+        canvas.onmousedown = function (e) {
+          huaban.isDraw = true
+          if (huaban.type === 'rect') {
+            var x = e.pageX - canvas.offsetLeft
+            var y = e.pageY - canvas.offsetTop
+            huaban.beginX = x
+            huaban.beginY = y
+          }
+          if (huaban.type === 'huabi') {
+            var x = e.pageX - canvas.offsetLeft
+            var y = e.pageY - canvas.offsetTop
+            huaban.beginX = x
+            huaban.beginY = y
+            ctx.beginPath()
+            ctx.moveTo(x, y)
+          }
+          canvas.onmousemove = function (e) {
+            if (huaban.isDraw) {
+              huaban[huaban.type + 'Fn'](e)
+            }
+          }
+          canvas.onmouseup = function () {
+            // 保存上次绘画的图形数据
+            huaban.imageData = ctx.getImageData(
+              0,
+              0,
+              canvas.offsetWidth,
+              canvas.offsetHeight
+            )
+            huaban.isDraw = false
+            if (huaban.type === 'huabi') {
+              ctx.closePath()
+            }
+          }
+        }
+      }
+      // 设置粗细的按钮
+      var lineDivs = document.querySelectorAll('.line')
+      lineDivs.forEach((item, i) => {
+        item.onclick = () => {
+          lineDivs.forEach((a) => a.classList.remove('active'))
+          item.classList.add('active')
+          if (i === 0) {
+            huaban.lineWidth = 6
+          } else if (i === 1) {
+            huaban.lineWidth = 16
+          } else {
+            huaban.lineWidth = 32
+          }
+        }
+      })
+      // 监听颜色改变事件
+      var colorInput = document.querySelector('#color')
+      colorInput.addEventListener('change', () => {
+        huaban.color = colorInput.value
+      })
+      // 下载文件
+      var downloadBtn = document.querySelector('.download')
+      downloadBtn.addEventListener('click', () => {
+        var url = canvas.toDataURL()
+        lcAlert({
+          title: '请点击图片另存为',
+          content: "<img style='width:auto;height:230px' src='" + url + "'/>",
+        })
+      })
+    </script>
+  </body>
+</html>

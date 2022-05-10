@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      #canvas {
+        border: 1px solid #aaaaaa;
+        display: block;
+        margin: 50px auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas id="canvas">你的浏览器居然不支持Canvas？！赶快换一个吧！！</canvas>
+    <script>
+      const canvas = document.querySelector('#canvas')
+      canvas.width = 800
+      canvas.height = 600
+      let context = canvas.getContext('2d')
+      context.fillStyle = 'pink'
+      context.fillRect(0, 0, 800, 600)
+
+      context.fillStyle = 'red'
+      context.fillRect(100, 100, 200, 100)
+
+      context.save()
+      context.fillStyle = 'blue'
+      // 平移都是平移的坐标系然后在绘制图像
+      context.translate(100, 100)
+      context.fillRect(100, 100, 200, 100)
+      context.restore()
+      // 每次平移完重置坐标系
+      context.save()
+      context.fillStyle = 'green'
+      context.translate(100, 200)
+      context.fillRect(100, 100, 200, 100)
+      context.restore()
+    </script>
+  </body>
+</html>
